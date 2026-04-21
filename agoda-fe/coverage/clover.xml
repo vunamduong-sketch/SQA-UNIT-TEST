@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1776798328967" clover="3.2.0">
-  <project timestamp="1776798328967" name="All files">
+<coverage generated="1776798446971" clover="3.2.0">
+  <project timestamp="1776798446971" name="All files">
     <metrics statements="93" coveredstatements="73" conditionals="55" coveredconditionals="31" methods="47" coveredmethods="26" elements="195" coveredelements="130" complexity="0" loc="93" ncloc="93" packages="1" files="4" classes="4"/>
     <file name="FilterSection.jsx" path="D:\SQA-UNIT-TEST\agoda-fe\src-under-test\components\HomeAndApartment\FilterSection.jsx">
       <metrics statements="14" coveredstatements="12" conditionals="4" coveredconditionals="3" methods="7" coveredmethods="5"/>
