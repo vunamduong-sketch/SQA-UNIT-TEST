@@ -14,7 +14,11 @@ module.exports = {
     "<rootDir>/src-under-test/components/Flight",
     "<rootDir>/src-under-test/components/Flight1",
     "<rootDir>/src-under-test/components/Home",
-    "<rootDir>/src-under-test/components/HomeAndApartment"
+    "<rootDir>/src-under-test/components/HomeAndApartment",
+    "<rootDir>/src-under-test/components/Hotel",
+    "<rootDir>/src-under-test/components/Profile",
+    "<rootDir>/src-under-test/components/Promotion",
+    "<rootDir>/src-under-test/components/TravelGuide"
   ],
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["<rootDir>/tests/setupTests.js"],

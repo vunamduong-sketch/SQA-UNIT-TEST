@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for HotelCard.jsx</title>
+    <title>Code coverage report for PromotionBanner.jsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> HotelCard.jsx</h1>
+        <h1><a href="index.html">All files</a> PromotionBanner.jsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Functions</span>
                 <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -93,25 +93,10 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,14 +105,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,46 +122,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
-import { useNavigate } from "react-router-dom";
-import { getImageUrl } from "config/api";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Calendar } from "lucide-react";
+import { formatDate } from "utils/formatDate";
 &nbsp;
-const HotelCard = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> item }) =&gt; {</span>
-  const navigate = <span class="cstat-no" title="statement not covered" >useNavigate();</span>
-  const {
-    name,
-    thumbnail,
-    max_discount,
-    avg_star,
-    review_count,
-    locationInfo,
-    total_weighted_score,
-    min_price,
-  } = <span class="cstat-no" title="statement not covered" >item;</span>
+const PromotionBanner = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
+    title,
+    description,
+    discountPercent,
+    startDate,
+    endDate,
+}) =&gt; {
+    const discountText = <span class="cstat-no" title="statement not covered" >discountPercent</span>
+        ? `Giảm tới ${Number(discountPercent)}%`
+        : "Ưu đãi đặc biệt";
 &nbsp;
-  let originalPrice = <span class="cstat-no" title="statement not covered" >min_price;</span>
-  let finalPrice = <span class="cstat-no" title="statement not covered" >min_price;</span>
-<span class="cstat-no" title="statement not covered" >  if (max_discount &amp;&amp; min_price) {</span>
-<span class="cstat-no" title="statement not covered" >    originalPrice = min_price;</span>
-<span class="cstat-no" title="statement not covered" >    finalPrice = min_price * (1 - max_discount / 100);</span>
-  }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-    &lt;div onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigate(`/hotel/${item.id}`)}</span>&gt;
-      &lt;img src={getImageUrl(thumbnail)} alt={name} /&gt;
-      &lt;h3&gt;{name}&lt;/h3&gt;
-      &lt;span&gt;{locationInfo}&lt;/span&gt;
-      &lt;span&gt;{total_weighted_score?.toFixed(1) || avg_star?.toFixed(1) || "-"}&lt;/span&gt;
-      &lt;span&gt;{review_count?.toLocaleString() || 0} nhận xét&lt;/span&gt;
-      {originalPrice &amp;&amp; originalPrice !== finalPrice &amp;&amp; (
-        &lt;span&gt;đ {originalPrice.toLocaleString()}&lt;/span&gt;
-      )}
-      &lt;span&gt;đ {finalPrice?.toLocaleString() || "-"}&lt;/span&gt;
-    &lt;/div&gt;
-  );
+<span class="cstat-no" title="statement not covered" >    return (</span>
+        &lt;div&gt;
+            &lt;h1&gt;{title}&lt;/h1&gt;
+            &lt;div dangerouslySetInnerHTML={{ __html: description }}&gt;&lt;/div&gt;
+            &lt;div&gt;
+                &lt;Calendar className="h-5 w-5" /&gt;
+                &lt;span&gt;
+                    {formatDate(startDate)} - {formatDate(endDate)}
+                &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span&gt;{discountText}&lt;/span&gt;
+        &lt;/div&gt;
+    );
 };
 &nbsp;
-export default HotelCard;
+export default PromotionBanner;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
