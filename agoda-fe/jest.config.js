@@ -3,7 +3,14 @@ module.exports = {
   roots: [
     "<rootDir>/tests",
     "<rootDir>/src-under-test/components/Search",
-    "<rootDir>/src-under-test/components/Activity"
+    "<rootDir>/src-under-test/components/Activity",
+    "<rootDir>/src-under-test/components/ActivityCity",
+    "<rootDir>/src-under-test/components/ActivityDetail",
+    "<rootDir>/src-under-test/components/BookingVehicles",
+    "<rootDir>/src-under-test/components/Cart",
+    "<rootDir>/src-under-test/components/Chatbot",
+    "<rootDir>/src-under-test/components/City",
+    "<rootDir>/src-under-test/components/Favourite"
   ],
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["<rootDir>/tests/setupTests.js"],
@@ -28,6 +35,7 @@ module.exports = {
   moduleNameMapper: {
     "^src-under-test/(.*)$": "<rootDir>/src-under-test/$1",
     "^config/(.*)$": "<rootDir>/../../SQA/agoda-fe/src/config/$1",
+    "^constants/(.*)$": "<rootDir>/../../SQA/agoda-fe/src/constants/$1",
     "^utils/(.*)$": "<rootDir>/../../SQA/agoda-fe/src/utils/$1",
     "^components/(.*)$": "<rootDir>/../../SQA/agoda-fe/src/components/$1",
     "^redux/(.*)$": "<rootDir>/../../SQA/agoda-fe/src/redux/$1",
