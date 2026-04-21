@@ -1,0 +1,7 @@
+{
+  "name": "agoda-fe-unit-tests",
+  "private": true,
+  "scripts": {
+    "test": "node ../../SQA/agoda-fe/node_modules/jest/bin/jest.js --config jest.config.js"
+  }
+}
