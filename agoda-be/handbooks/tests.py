@@ -38,6 +38,7 @@ class HandbookModelTests(TestCase):
 			city=self.city,
 		)
 		handbook.total_click = 5
+		handbook.save(update_fields=["total_click"])  # persist trước khi tính score
 		handbook.update_total_weighted_score()
 		handbook.refresh_from_db()
 		self.assertAlmostEqual(handbook.total_weighted_score, handbook.calc_total_weighted_score, places=6)
