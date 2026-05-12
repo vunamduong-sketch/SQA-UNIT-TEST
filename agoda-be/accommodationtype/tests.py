@@ -10,18 +10,26 @@ from countries.models import Country
 
 
 class AccommodationTypeTests(TestCase):
+    """Test các chức năng của model AccommodationType và API"""
+    
     def setUp(self):
         self.factory = APIRequestFactory()
         self.country = Country.objects.create(name="Vietnam")
         self.city = City.objects.create(name="Da Nang", country=self.country)
 
+    # TC ID: ACM-TC-001
     def test_acm_tc_001_model_str_returns_expected_text(self):
-        # TC ID: ACM-TC-001
+        # Kiểm tra: Phương thức __str__ của model AccommodationType trả về "Tên loại, Tên thành phố"
+        # Mục đích: Đảm bảo hiển thị đầy đủ thông tin loại chỗ ở và thành phố khi in ra
+        # Kỳ vọng: str(item) trả về "Resort (Da Nang)"
         item = AccommodationType.objects.create(city=self.city, name="Resort")
         self.assertEqual(str(item), "Resort (Da Nang)")
 
+    # TC ID: ACM-TC-002
     def test_acm_tc_002_serializer_returns_all_fields(self):
-        # TC ID: ACM-TC-002
+        # Kiểm tra: Serializer trả về đầy đủ các trường của AccommodationType
+        # Mục đích: Đảm bảo tất cả thông tin loại chỗ ở được serialize đúng
+        # Kỳ vọng: Trả về đầy đủ name, description, city, id, created_at
         item = AccommodationType.objects.create(
             city=self.city,
             name="Apartment",
@@ -35,8 +43,11 @@ class AccommodationTypeTests(TestCase):
         self.assertIn("id", data)
         self.assertIn("created_at", data)
 
+    # TC ID: ACM-TC-003
     def test_acm_tc_003_get_queryset_filters_by_city_id(self):
-        # TC ID: ACM-TC-003
+        # Kiểm tra: Lọc loại chỗ ở theo city_id
+        # Mục đích: Đảm bảo chỉ trả về các loại chỗ ở thuộc thành phố được chỉ định
+        # Kỳ vọng: Chỉ trả về AccommodationType của Da Nang, không trả về của Tokyo
         other_country = Country.objects.create(name="Japan")
         other_city = City.objects.create(name="Tokyo", country=other_country)
 
@@ -50,8 +61,11 @@ class AccommodationTypeTests(TestCase):
         self.assertEqual(queryset.count(), 1)
         self.assertEqual(queryset.first().id, target.id)
 
+    # TC ID: ACM-TC-004
     def test_acm_tc_004_list_returns_wrapped_response(self):
-        # TC ID: ACM-TC-004
+        # Kiểm tra: API trả về danh sách loại chỗ ở theo thành phố với format chuẩn
+        # Mục đích: Đảm bảo API trả về đúng định dạng response với isSuccess, message, data
+        # Kỳ vọng: Trả về 200, isSuccess=True, data chứa 1 AccommodationType
         AccommodationType.objects.create(city=self.city, name="Resort")
         view = AccommodationTypeByCityView.as_view()
 

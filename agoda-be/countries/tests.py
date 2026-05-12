@@ -17,13 +17,21 @@ from countries.views import (
 
 
 class CountryModelAndSerializerTests(TestCase):
+	"""Test các chức năng của model Country và CountrySerializer"""
+	
+	# TC ID: CTRY-TC-001
 	def test_ctry_tc_001_model_str_returns_name(self):
-		# TC ID: CTRY-TC-001
+		# Kiểm tra: Phương thức __str__ của model Country trả về tên quốc gia
+		# Mục đích: Đảm bảo hiển thị đúng tên quốc gia khi in ra hoặc debug
+		# Kỳ vọng: str(country) trả về "Vietnam"
 		country = Country.objects.create(name="Vietnam")
 		self.assertEqual(str(country), "Vietnam")
 
+	# TC ID: CTRY-TC-002
 	def test_ctry_tc_002_serializer_returns_all_fields(self):
-		# TC ID: CTRY-TC-002
+		# Kiểm tra: Serializer trả về đầy đủ các trường của Country
+		# Mục đích: Đảm bảo tất cả thông tin quốc gia được serialize đúng
+		# Kỳ vọng: Trả về đầy đủ name, description, calling_code, image_handbook, created_at, id
 		country = Country.objects.create(
 			name="Singapore",
 			description="Island nation",
@@ -41,11 +49,16 @@ class CountryModelAndSerializerTests(TestCase):
 
 
 class CountryPaginationTests(TestCase):
+	"""Test các chức năng phân trang và lọc dữ liệu quốc gia"""
+	
 	def setUp(self):
 		self.factory = APIRequestFactory()
 
+	# TC ID: CTRY-TC-003
 	def test_ctry_tc_003_get_page_size_parses_valid_params(self):
-		# TC ID: CTRY-TC-003
+		# Kiểm tra: Phân tích các tham số pageSize, current, name từ request
+		# Mục đích: Đảm bảo hệ thống đọc đúng các tham số phân trang từ URL
+		# Kỳ vọng: page_size=20, currentPage=2, filters chứa name__icontains="vi"
 		pagination = CountryPagination()
 		request = Request(
 			self.factory.get(
@@ -61,8 +74,11 @@ class CountryPaginationTests(TestCase):
 		self.assertEqual(pagination.filters.get("name__icontains"), "vi")
 		pagination.filters.clear()
 
+	# TC ID: CTRY-TC-004
 	def test_ctry_tc_004_get_paginated_response_returns_expected_meta(self):
-		# TC ID: CTRY-TC-004
+		# Kiểm tra: Trả về response phân trang với đầy đủ metadata
+		# Mục đích: Đảm bảo response chứa thông tin totalItems, currentPage, itemsPerPage, totalPages
+		# Kỳ vọng: Trả về 200, isSuccess=True, meta chứa đầy đủ thông tin phân trang
 		Country.objects.create(name="Vietnam")
 		Country.objects.create(name="Vietland")
 
@@ -84,6 +100,8 @@ class CountryPaginationTests(TestCase):
 
 
 class CountryViewTests(TestCase):
+	"""Test các chức năng CRUD của Country API"""
+	
 	def setUp(self):
 		self.factory = APIRequestFactory()
 		self.user = get_user_model().objects.create_user(
@@ -92,8 +110,11 @@ class CountryViewTests(TestCase):
 			password="pass12345",
 		)
 
+	# TC ID: CTRY-TC-005
 	def test_ctry_tc_005_get_queryset_filters_and_sorts(self):
-		# TC ID: CTRY-TC-005
+		# Kiểm tra: Lọc và sắp xếp danh sách quốc gia
+		# Mục đích: Đảm bảo có thể lọc theo tên và sắp xếp theo thứ tự tăng/giảm dần
+		# Kỳ vọng: Chỉ trả về quốc gia có tên chứa "vi", được sắp xếp theo name tăng dần		
 		Country.objects.create(name="Vietnam")
 		Country.objects.create(name="Vietland")
 		Country.objects.create(name="Japan")
@@ -112,8 +133,11 @@ class CountryViewTests(TestCase):
 		self.assertEqual(names, sorted(names))
 		self.assertTrue(all("vi" in name.lower() for name in names))
 
+	# TC ID: CTRY-TC-006
 	def test_ctry_tc_006_retrieve_returns_wrapped_response(self):
-		# TC ID: CTRY-TC-006
+		# Kiểm tra: Lấy thông tin chi tiết một quốc gia
+		# Mục đích: Đảm bảo API trả về đúng thông tin quốc gia với format chuẩn
+		# Kỳ vọng: Trả về 200, isSuccess=True, data chứa thông tin quốc gia		
 		country = Country.objects.create(name="Thailand")
 		view = CountryDetailView.as_view()
 
@@ -125,8 +149,11 @@ class CountryViewTests(TestCase):
 		self.assertIn("message", response.data)
 		self.assertEqual(response.data["data"]["name"], "Thailand")
 
+	# TC ID: CTRY-TC-007
 	def test_ctry_tc_007_create_creates_country_successfully(self):
-		# TC ID: CTRY-TC-007
+		# Kiểm tra: Tạo mới quốc gia thành công
+		# Mục đích: Đảm bảo có thể tạo quốc gia mới với đầy đủ thông tin
+		# Kỳ vọng: Trả về 200, isSuccess=True, quốc gia được tạo trong database
 		view = CountryCreateView.as_view()
 		payload = {
 			"name": "Laos",
@@ -142,8 +169,11 @@ class CountryViewTests(TestCase):
 		self.assertTrue(response.data["isSuccess"])
 		self.assertTrue(Country.objects.filter(name="Laos").exists())
 
+	# TC ID: CTRY-TC-008
 	def test_ctry_tc_008_update_updates_country_with_partial_payload(self):
-		# TC ID: CTRY-TC-008
+		# Kiểm tra: Cập nhật một phần thông tin quốc gia (partial update)
+		# Mục đích: Đảm bảo có thể cập nhật chỉ một số trường mà không cần gửi tất cả
+		# Kỳ vọng: Trả về 200, isSuccess=True, chỉ trường description được cập nhật
 		country = Country.objects.create(name="Indonesia", description="Old")
 		view = CountryUpdateView.as_view()
 		payload = {"description": "Updated"}
@@ -159,8 +189,11 @@ class CountryViewTests(TestCase):
 		self.assertTrue(response.data["isSuccess"])
 		self.assertEqual(country.description, "Updated")
 
+	# TC ID: CTRY-TC-009
 	def test_ctry_tc_009_destroy_deletes_country_successfully(self):
-		# TC ID: CTRY-TC-009
+		# Kiểm tra: Xóa quốc gia thành công
+		# Mục đích: Đảm bảo có thể xóa quốc gia khỏi hệ thống
+		# Kỳ vọng: Trả về 200, isSuccess=True, quốc gia bị xóa khỏi database
 		country = Country.objects.create(name="Brunei")
 		view = CountryDeleteView.as_view()
 
