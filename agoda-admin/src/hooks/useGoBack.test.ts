@@ -7,7 +7,7 @@ vi.mock('react-router', () => ({ useNavigate: vi.fn() }));
 
 describe('useGoBack Hook', () => {
 
-    it('NAV-TC-001: Should navigate(-1) if history state exists', () => {
+    it('HKS-TC-001: Should navigate(-1) if history state exists', () => {
         const mockNavigate = vi.fn();
         (useNavigate as any).mockReturnValue(mockNavigate);
         Object.defineProperty(window, 'history', { value: { state: { idx: 1 } }, writable: true });
@@ -16,7 +16,7 @@ describe('useGoBack Hook', () => {
         expect(mockNavigate).toHaveBeenCalledWith(-1);
     });
 
-    it('NAV-TC-002: Should navigate("/") if no history exists', () => {
+    it('HKS-TC-002: Should navigate("/") if no history exists', () => {
         const mockNavigate = vi.fn();
         (useNavigate as any).mockReturnValue(mockNavigate);
         Object.defineProperty(window, 'history', { value: { state: null }, writable: true });
@@ -25,7 +25,7 @@ describe('useGoBack Hook', () => {
         expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
-    it('NAV-TC-03: Should handle edge case with missing state object', () => {
+    it('HKS-TC-003: Should handle edge case with missing state object', () => {
         const mockNavigate = vi.fn();
         (useNavigate as any).mockReturnValue(mockNavigate);
         Object.defineProperty(window, 'history', { value: {}, writable: true });
