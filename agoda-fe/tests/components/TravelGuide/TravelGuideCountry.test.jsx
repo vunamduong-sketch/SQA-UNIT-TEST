@@ -56,41 +56,64 @@ describe("TravelGuideCountry", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: GUIDE-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads country detail, featured guides and destinations" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads country detail, featured guides and destinations", async () => {
-    // TC_TRAVELGUIDE_03
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCountryDetail.mockResolvedValue({ isSuccess: true, data: { id: 84, name: "Viet Nam", image_handbook: "vn.jpg" } });
     mockCallFetchHandbook
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ data: [{ id: 1, title: "Guide VN", image: "g.jpg", city: { id: 10, country: { id: 84 } } }] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [{ id: 2, title: "Guide List", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCity.mockResolvedValue({ data: [{ id: 10, name: "Da Nang", country: { id: 84 } }] });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<TravelGuideCountry />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchCountryDetail).toHaveBeenCalledWith("84");
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchCity).toHaveBeenCalledWith("current=1&pageSize=50&country_id=84");
     });
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Guide VN")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Da Nang")).toBeInTheDocument();
   });
 
+  // TC ID: GUIDE-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "updates category and pagination for country guides" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("updates category and pagination for country guides", async () => {
-    // TC_TRAVELGUIDE_04
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCountryDetail.mockResolvedValue({ isSuccess: true, data: { id: 84, name: "Viet Nam" } });
     mockCallFetchHandbook
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ data: [] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [{ id: 2, title: "Guide List", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValue({ isSuccess: true, data: [{ id: 3, title: "Guide Food", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCity.mockResolvedValue({ data: [] });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<TravelGuideCountry />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("country-category"), {
       target: { value: "food" },
     });
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchHandbook).toHaveBeenLastCalledWith(
         "current=1&pageSize=10&country_id=84&category=food&recommended=true"
       );

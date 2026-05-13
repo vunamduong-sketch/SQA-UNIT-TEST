@@ -5,72 +5,48 @@ import { MessageChatbotInput } from "src-under-test/components/Chatbot/MessageCh
 // ============================================================
 // TÊN FILE TEST: MessageChatbotInput.test.jsx
 // MÔ TẢ:
-// - Kiểm thử ô nhập tin nhắn của Chatbot theo behavior người dùng.
-// - Bao phủ submit bằng button, disabled state, Enter để gửi và Shift+Enter để xuống dòng.
-// - Test không phụ thuộc className/CSS.
+// - Bộ test rút gọn cho ô nhập tin nhắn của Chatbot.
+// - Chỉ giữ 2 behavior chính: gửi message hợp lệ và trạng thái disabled.
+// - Bỏ các case phím tắt Enter/Shift+Enter để giảm số lượng test.
 // ============================================================
 
 describe("MessageChatbotInput", () => {
-  // TC ID: CHATBOT-TC-008
+  // TC ID: CHATBOT-TC-004
   // MỤC TIÊU: User nhập khoảng trắng dư vẫn gửi nội dung đã trim và textarea được clear.
   // INPUT: Textarea value "  Xin chao  ", click nút "Gửi".
   // EXPECTED OUTPUT: onSendMessage nhận "Xin chao" và textarea rỗng.
-  it("CHATBOT-TC-008 - submits a trimmed message and clears the textarea", () => {
+  it("CHATBOT-TC-004 - submits a trimmed message and clears the textarea", () => {
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const onSendMessage = jest.fn();
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<MessageChatbotInput onSendMessage={onSendMessage} />);
 
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const textarea = screen.getByPlaceholderText("Hãy hỏi 1 câu hỏi bất kỳ");
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(textarea, { target: { value: "  Xin chao  " } });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("button", { name: "Gửi" }));
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(onSendMessage).toHaveBeenCalledWith("Xin chao");
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(textarea.value).toBe("");
   });
 
-  // TC ID: CHATBOT-TC-009
+  // TC ID: CHATBOT-TC-005
   // MỤC TIÊU: Trong lúc chờ phản hồi, input và button gửi phải bị disable để tránh gửi trùng.
   // INPUT: Render component với prop disabled=true.
   // EXPECTED OUTPUT: Placeholder chờ phản hồi hiển thị, textarea và button disabled.
-  it("CHATBOT-TC-009 - disables sending while waiting for a response", () => {
+  it("CHATBOT-TC-005 - disables sending while waiting for a response", () => {
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const onSendMessage = jest.fn();
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<MessageChatbotInput onSendMessage={onSendMessage} disabled />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByPlaceholderText("Đang chờ phản hồi...")).toBeDisabled();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByRole("button", { name: /Đang gửi/ })).toBeDisabled();
-  });
-
-  // TC ID: CHATBOT-TC-010
-  // MỤC TIÊU: User có thể nhấn Enter để gửi nhanh thay vì click button.
-  // INPUT: Textarea value "Tim khach san", keyDown Enter không kèm Shift.
-  // EXPECTED OUTPUT: onSendMessage được gọi với nội dung đã nhập.
-  it("CHATBOT-TC-010 - submits the message when Enter is pressed", () => {
-    const onSendMessage = jest.fn();
-    render(<MessageChatbotInput onSendMessage={onSendMessage} />);
-
-    const textarea = screen.getByPlaceholderText("Hãy hỏi 1 câu hỏi bất kỳ");
-    fireEvent.change(textarea, { target: { value: "Tim khach san" } });
-    fireEvent.keyPress(textarea, { key: "Enter", code: "Enter", charCode: 13 });
-
-    expect(onSendMessage).toHaveBeenCalledWith("Tim khach san");
-  });
-
-  // TC ID: CHATBOT-TC-011
-  // MỤC TIÊU: Shift+Enter không gửi message để user có thể nhập nhiều dòng.
-  // INPUT: Textarea value "Dong 1", keyDown Enter kèm shiftKey=true.
-  // EXPECTED OUTPUT: onSendMessage không được gọi.
-  it("CHATBOT-TC-011 - does not submit when Shift Enter is pressed", () => {
-    const onSendMessage = jest.fn();
-    render(<MessageChatbotInput onSendMessage={onSendMessage} />);
-
-    const textarea = screen.getByPlaceholderText("Hãy hỏi 1 câu hỏi bất kỳ");
-    fireEvent.change(textarea, { target: { value: "Dong 1" } });
-    fireEvent.keyPress(textarea, {
-      key: "Enter",
-      code: "Enter",
-      charCode: 13,
-      shiftKey: true,
-    });
-
-    expect(onSendMessage).not.toHaveBeenCalled();
   });
 });

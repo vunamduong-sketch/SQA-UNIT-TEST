@@ -42,6 +42,7 @@ describe("ExploreLocationNearby", () => {
       ],
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ExploreLocationNearby />);
 
     // Expected: Heading section luôn hiển thị trước/sau khi API hoàn tất.
@@ -51,6 +52,7 @@ describe("ExploreLocationNearby", () => {
 
     // Expected: API được gọi đúng contract limit=50 theo scope plan.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(getTopVietNamHotel).toHaveBeenCalledWith({ limit: 50 })
     );
 
@@ -78,6 +80,7 @@ describe("ExploreLocationNearby", () => {
       data: [{ id: 1, name: "Đà Nẵng", image: "/danang.jpg" }],
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ExploreLocationNearby />);
 
     // Expected: API đã chạy xong để assertion không bị race condition.
@@ -93,7 +96,9 @@ describe("ExploreLocationNearby", () => {
   // LÝ DO: Lỗi backend không nên làm hỏng toàn bộ trải nghiệm trang Activity.
   it("keeps the page usable when the API call fails", async () => {
     // Ẩn console.error có chủ đích để output test sạch hơn.
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    // Arrange: gia lap API bi loi de kiem tra nhanh xu ly loi cua component.
     getTopVietNamHotel.mockRejectedValue(new Error("Network error"));
 
     // Expected: Render component không throw dù API reject trong effect.

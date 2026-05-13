@@ -75,40 +75,64 @@ describe("Hotel ReviewTabView", () => {
     });
   });
 
+  // TC ID: HOTEL-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads reviews and paginates" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads reviews and paginates", async () => {
-    // TC_HOTEL_05
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewTabView hotelId={77} />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Tuyet voi")).toBeInTheDocument();
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("page2"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchReview).toHaveBeenCalledWith(expect.stringContaining("current=2"));
     });
   });
 
+  // TC ID: TC_HOTEL_06
+
+  // MỤC TIÊU: Kiểm tra kịch bản "validates review submission before calling API".
+  // LÝ DO: Đảm bảo test case có mã nhận diện rõ ràng và tập trung vào hành vi người dùng.
   it("validates review submission before calling API", async () => {
-    // TC_HOTEL_06
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewTabView hotelId={77} />);
 
     await screen.findByText("Tuyet voi");
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Gửi đánh giá"));
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(mockToastError).toHaveBeenCalled();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(mockCallCreateReview).not.toHaveBeenCalled();
   });
 
+  // TC ID: TC_HOTEL_07
+
+  // MỤC TIÊU: Kiểm tra kịch bản "submits a new review when rating and comment are provided".
+  // LÝ DO: Đảm bảo test case có mã nhận diện rõ ràng và tập trung vào hành vi người dùng.
   it("submits a new review when rating and comment are provided", async () => {
-    // TC_HOTEL_07
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallCreateReview.mockResolvedValue({ isSuccess: true });
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewTabView hotelId={77} />);
 
     await screen.findByText("Tuyet voi");
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("rate"));
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByPlaceholderText("Chia sẻ trải nghiệm của bạn về khách sạn..."), { target: { value: "Khach san dep" } });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Gửi đánh giá"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallCreateReview).toHaveBeenCalledWith(expect.objectContaining({
         service_ref_id: 77,
         rating: 4,

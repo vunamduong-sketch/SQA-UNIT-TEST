@@ -66,39 +66,56 @@ describe("Profile Chat", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: PROFILE-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads customer list for non-customer users" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads customer list for non-customer users", async () => {
-    // TC_PROFILE_01
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchUser.mockResolvedValue({
       isSuccess: true,
       data: [{ id: 2, first_name: "A", last_name: "B", username: "ab", avatar: "a.png" }],
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Chat />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchUser).toHaveBeenCalledWith("current=1&pageSize=1000&role=customer");
     });
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByLabelText("Select a person")).toBeInTheDocument();
   });
 
+  // TC ID: PROFILE-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "creates or opens a conversation when selecting a user" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("creates or opens a conversation when selecting a user", async () => {
-    // TC_PROFILE_02
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchUser.mockResolvedValue({
       isSuccess: true,
       data: [{ id: 2, first_name: "A", last_name: "B", username: "ab", avatar: "a.png" }],
     });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallGetOrCreateConversation.mockResolvedValue({
       isSuccess: true,
       data: { id: "conv-new", otherUser: { id: 2 } },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Chat />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("Select a person"), { target: { value: "2" } });
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallGetOrCreateConversation).toHaveBeenCalledWith({ user_id: 2 });
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockSetConversations).toHaveBeenCalled();
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockSetSelectedConversation).toHaveBeenCalled();
     });
   });

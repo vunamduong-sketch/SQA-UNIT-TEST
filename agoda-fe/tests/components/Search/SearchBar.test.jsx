@@ -114,6 +114,7 @@ describe("SearchBar", () => {
   // MỤC TIÊU: Khi user click nút "Tìm kiếm", form gửi đúng các giá trị hiện tại.
   // LÝ DO: Search result phụ thuộc trực tiếp vào location, ngày, số khách/phòng và loại lưu trú.
   it("SEARCH-TC-001 - submits the current search values when the search button is clicked", () => {
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const onSearch = jest.fn();
 
     // Input: Form được khởi tạo với đầy đủ thông tin tìm kiếm.
@@ -134,6 +135,7 @@ describe("SearchBar", () => {
     );
 
     // Action: User bấm nút tìm kiếm.
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("button", { name: "Tìm kiếm" }));
 
     // Expected: onSearch được gọi đúng một lần.
@@ -158,12 +160,14 @@ describe("SearchBar", () => {
   //           khi user chọn một city hợp lệ.
   // LÝ DO: Đây là flow chính giúp user chọn đúng điểm đến từ suggestion backend.
   it("SEARCH-TC-002 - fetches city suggestions after debounce and auto-searches when a city is selected", async () => {
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const onSearch = jest.fn();
     // Input: API trả về một city suggestion.
     getCities.mockResolvedValue({
       data: [{ id: 79, name: "Ho Chi Minh City" }],
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(
       <SearchBar
         onSearch={onSearch}
@@ -176,26 +180,34 @@ describe("SearchBar", () => {
     );
 
     // Action: User focus và nhập query đủ 2 ký tự.
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const locationInput = screen.getByPlaceholderText("Chọn điểm đến");
+    // Act: mo phong viec user focus vao input de mo trang thai tuong tac.
     fireEvent.focus(locationInput);
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(locationInput, { target: { value: "Ho" } });
 
     // Action: Cho debounce 300ms chạy xong.
+    // Act: cho cac cap nhat bat dong bo/timer chay xong truoc khi kiem tra ket qua.
     await act(async () => {
+      // Act: tua timer de debounce hoac timeout trong component duoc thuc thi.
       jest.advanceTimersByTime(300);
       await Promise.resolve();
     });
 
     // Expected: API city suggestion được gọi đúng params.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(getCities).toHaveBeenCalledWith({ name: "Ho" })
     );
 
     // Action: User chọn city suggestion từ popover.
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(await screen.findByText("Ho Chi Minh City"));
 
     // Expected: Sau khi chọn city, onSearch tự chạy với city name và cityId đã chọn.
     expect(onSearch).toHaveBeenCalledTimes(1);
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(onSearch.mock.calls[0][0]).toMatchObject({
       location: "Ho Chi Minh City",
       cityId: 79,
@@ -207,15 +219,19 @@ describe("SearchBar", () => {
   // MỤC TIÊU: Không gọi API suggestion khi query ngắn hơn 2 ký tự.
   // LÝ DO: Tránh request thừa, giảm tải backend và hạn chế kết quả không hữu ích.
   it("SEARCH-TC-003 - does not fetch suggestions when the query is shorter than two characters", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<SearchBar onSearch={jest.fn()} />);
 
     // Action: User nhập query chỉ có 1 ký tự.
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByPlaceholderText("Chọn điểm đến"), {
       target: { value: "H" },
     });
 
     // Action: Cho debounce chạy hết 300ms.
+    // Act: cho cac cap nhat bat dong bo/timer chay xong truoc khi kiem tra ket qua.
     act(() => {
+      // Act: tua timer de debounce hoac timeout trong component duoc thuc thi.
       jest.advanceTimersByTime(300);
     });
 

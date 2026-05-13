@@ -71,10 +71,15 @@ describe("PromotionHotels", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: PROMO-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads countries and renders hotel promotion list" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads countries and renders hotel promotion list", async () => {
-    // TC_PROMOTION_01
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCountries.mockResolvedValue({ data: [{ id: 1, name: "Viet Nam" }] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCities.mockResolvedValue({ data: [] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetPromotionDetail.mockResolvedValue({
       data: {
         title: "Sale Hotel",
@@ -87,21 +92,32 @@ describe("PromotionHotels", () => {
       },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionHotels />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetCountries).toHaveBeenCalled();
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetPromotionDetail).toHaveBeenCalledWith("11", { promotion_type: 1 });
     });
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("banner-Sale Hotel")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Hotel A")).toBeInTheDocument();
   });
 
+  // TC ID: PROMO-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "loads cities when selecting a country and shows empty state" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads cities when selecting a country and shows empty state", async () => {
-    // TC_PROMOTION_02
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCountries.mockResolvedValue({ data: [{ id: 1, name: "Viet Nam" }] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCities.mockResolvedValue({ data: [{ id: 10, name: "Da Nang" }] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetPromotionDetail.mockResolvedValue({
       data: {
         title: "Sale Hotel",
@@ -114,16 +130,21 @@ describe("PromotionHotels", () => {
       },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionHotels />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("Chọn quốc gia"), {
       target: { value: "1" },
     });
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetCities).toHaveBeenCalledWith({ country_id: 1 });
     });
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(
       await screen.findByText("Không có khách sạn phù hợp với bộ lọc của bạn.")
     ).toBeInTheDocument();

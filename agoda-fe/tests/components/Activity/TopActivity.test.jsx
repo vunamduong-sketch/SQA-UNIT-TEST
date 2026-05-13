@@ -114,11 +114,14 @@ describe("TopActivity", () => {
 
     // Expected: Card Bà Nà Hills là link tới trang detail đúng id.
     const banaLink = screen.getByRole("link", { name: /Bà Nà Hills/i });
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(banaLink).toHaveAttribute("href", "/activity/detail/11");
 
     // Expected: Trong card có điểm sao và giá đã format để user đọc được.
     expect(within(banaLink).getByText("4.5")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(within(banaLink).getByText(/1\.200\.000\s*₫/)).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(within(banaLink).getByText("1.200.000")).toBeInTheDocument();
 
     // Expected: Activity thứ hai cũng điều hướng đúng detail path.

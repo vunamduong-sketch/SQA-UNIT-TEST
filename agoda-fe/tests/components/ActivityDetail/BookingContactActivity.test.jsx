@@ -3,7 +3,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import BookingContactActivity from "src-under-test/components/ActivityDetail/BookingContactActivity";
 import { addBookingContact, callFetchDetailActivityDateBooking, getBookingDetail, getCountries } from "config/api";
 
-
 // ============================================================
 // TÊN FILE TEST: BookingContactActivity.test.jsx
 // MÔ TẢ: Kiểm tra vừa đủ bước nhập thông tin liên hệ: loading,
@@ -155,10 +154,15 @@ describe("BookingContactActivity", () => {
   // EXPECTED OUTPUT: User nhìn thấy Loading Spinner.
   // LÝ DO TEST: Đảm bảo màn hình có feedback trong lúc hệ thống tải dữ liệu booking.
   it("ACTDETAIL-TC-001 - shows loading state while booking data is being fetched", () => {
+    // Arrange: giả lập API lấy booking chưa resolve để component luôn ở trạng thái loading.
+    // Promise không gọi resolve/reject giúp test kiểm tra đúng UI trong lúc chờ dữ liệu.
+    // Arrange: cau hinh mock tra ve gia tri can thiet cho test case nay.
     getBookingDetail.mockReturnValue(new Promise(() => { }));
 
+    // Act: render component như khi user mở trang nhập thông tin liên hệ booking activity.
     render(<BookingContactActivity />);
 
+    // Assert: spinner phải xuất hiện ngay lập tức để user biết hệ thống đang tải dữ liệu.
     expect(screen.getByText("Loading Spinner")).toBeInTheDocument();
   });
 
@@ -168,10 +172,15 @@ describe("BookingContactActivity", () => {
   // EXPECTED OUTPUT: Message "Không tìm thấy thông tin đặt chỗ" được hiển thị.
   // LÝ DO TEST: Không được render form contact/payment với dữ liệu booking không tồn tại.
   it("ACTDETAIL-TC-002 - shows not found message when booking data is missing", async () => {
+    // Arrange: giả lập backend không tìm thấy booking tương ứng booking_id trên URL.
     getBookingDetail.mockResolvedValue(null);
 
+    // Act: render component để useEffect gọi API và xử lý response null.
     render(<BookingContactActivity />);
 
+    // Assert: dùng findByText vì thông báo chỉ xuất hiện sau khi Promise getBookingDetail hoàn tất.
+    // Kỳ vọng page hiển thị trạng thái not found thay vì tiếp tục render form sai dữ liệu.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Không tìm thấy thông tin đặt chỗ")).toBeInTheDocument();
   });
 
@@ -183,20 +192,30 @@ describe("BookingContactActivity", () => {
   // - navigate chuyển sang /book/payment với booking_id/type/ref đúng.
   // LÝ DO TEST: Đây là luồng chính của bước nhập thông tin liên hệ trong booking activity.
   it("ACTDETAIL-TC-003 - submits contact information and navigates to payment step", async () => {
+    // Arrange: giả lập booking hợp lệ để component có đủ dữ liệu render form và summary.
+    // bookingResponse chứa service_ref_ids[0] để component tiếp tục gọi API lấy activity detail.
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     getBookingDetail.mockResolvedValue(bookingResponse);
 
+    // Act: render component, các API phụ đã được setup mặc định trong beforeEach.
     render(<BookingContactActivity />);
 
-    // Chờ activity summary render xong để chắc chắn dữ liệu async đã load.
+    // Assert bước load dữ liệu: chờ tên activity xuất hiện để chắc chắn booking detail
+    // và activity date detail đã load xong trước khi user bấm tiếp tục.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Saigon Food Tour")).toBeInTheDocument();
 
-    // Mô phỏng hành động user bấm nút chuyển sang bước thanh toán.
+    // Act: mô phỏng user bấm nút chuyển sang bước thanh toán sau khi kiểm tra thông tin.
     fireEvent.click(screen.getByText("Tiếp tục đến thanh toán"));
 
-    // Chỉ cần assert API được gọi, không kiểm tra quá sâu payload để test vừa đủ.
+    // Assert: hệ thống phải gọi API lưu thông tin liên hệ trước khi điều hướng thanh toán.
+    // waitFor cần thiết vì submit có thể xử lý bất đồng bộ.
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => expect(addBookingContact).toHaveBeenCalled());
 
-    // Kiểm tra URL điều hướng đúng contract của màn payment.
+    // Assert: sau khi lưu contact thành công, component điều hướng đúng route payment
+    // và giữ nguyên booking_id/type/ref lấy từ query string ban đầu.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(mockNavigate).toHaveBeenCalledWith("/book/payment?booking_id=1&type=2&ref=abc");
   });
 });

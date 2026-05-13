@@ -165,13 +165,17 @@ describe("BookingVehicles", () => {
   // INPUT: Route state hợp lệ, Groq trả về "Ha Noi", callFetchCar trả về data rỗng.
   // EXPECTED OUTPUT: API được gọi đúng query và user thấy "Chưa có xe taxi".
   it("BOOKVEH-TC-001 - fetches car data and renders empty state", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingVehicles />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchCar).toHaveBeenCalledWith(
         "current=1&pageSize=20&driver_status=idle&driver_area_name=Ha Noi&recommended=true"
       )
     );
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Chưa có xe taxi")).toBeInTheDocument();
   });
 
@@ -180,12 +184,16 @@ describe("BookingVehicles", () => {
   // INPUT: Click nút "Add extras".
   // EXPECTED OUTPUT: Hiển thị "Điểm dừng thêm" và "Vật nuôi".
   it("BOOKVEH-TC-002 - opens extras section when user clicks Add extras", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingVehicles />);
 
     await screen.findByText("Add extras");
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Add extras"));
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Điểm dừng thêm")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Vật nuôi")).toBeInTheDocument();
   });
 
@@ -194,12 +202,15 @@ describe("BookingVehicles", () => {
   // RESULT HIỆN TẠI: EXPECTED FAIL.
   // NOTES: handleGetCars hiện chưa try/catch callFetchCar rejected nên Jest chỉ báo Network error.
   it("BOOKVEH-TC-003 - should handle rejected fetch car API request", async () => {
+    // Arrange: gia lap API bi loi de kiem tra nhanh xu ly loi cua component.
     mockCallFetchCar.mockRejectedValue(new Error("Network error"));
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingVehicles />);
 
     // Chỉ chờ API được gọi, không tìm text trong DOM.
     // Nếu tiếp tục findByText khi API fail, Testing Library sẽ in toàn bộ DOM rất dài.
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => expect(mockCallFetchCar).toHaveBeenCalled());
   });
 });

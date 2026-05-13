@@ -106,14 +106,21 @@ describe("ReviewActivity", () => {
   // - API được gọi với query current=1&pageSize=10&service_type=2&service_ref_id=10.
   // - User nhìn thấy "Chưa có đánh giá nào".
   // LÝ DO TEST: Đảm bảo review section gắn đúng Activity hiện tại và xử lý danh sách rỗng.
+  // TC ID: ACTDETAIL-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "ACTDETAIL-TC-007 - fetches activity reviews and shows empty state" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("ACTDETAIL-TC-007 - fetches activity reviews and shows empty state", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewActivity activity={{ avg_star: 4.5 }} />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(callFetchReview).toHaveBeenCalledWith(
         "current=1&pageSize=10&service_type=2&service_ref_id=10"
       )
     );
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Chưa có đánh giá nào")).toBeInTheDocument();
   });
 
@@ -125,11 +132,15 @@ describe("ReviewActivity", () => {
   // - callCreateReview không được gọi.
   // LÝ DO TEST: Chặn dữ liệu rỗng trước khi gửi lên backend.
   it("ACTDETAIL-TC-008 - shows validation error when submitting an empty review", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewActivity activity={{ avg_star: 4.5 }} />);
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("button", { name: "Gửi đánh giá" }));
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(toast.error).toHaveBeenCalled();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(callCreateReview).not.toHaveBeenCalled();
   });
 
@@ -141,16 +152,25 @@ describe("ReviewActivity", () => {
   // - User click "Gửi đánh giá".
   // EXPECTED OUTPUT: callCreateReview được gọi với service_type, activityId, rating và comment đúng.
   // LÝ DO TEST: Đây là happy path chính của tính năng gửi review.
+  // TC ID: ACTDETAIL-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "ACTDETAIL-TC-009 - creates a review when rating and comment are provided" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("ACTDETAIL-TC-009 - creates a review when rating and comment are provided", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewActivity activity={{ avg_star: 4.5 }} />);
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Set Rating"));
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByPlaceholderText("Chia sẻ trải nghiệm của bạn về khách sạn..."), {
       target: { value: "Amazing trip" },
     });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("button", { name: "Gửi đánh giá" }));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(callCreateReview).toHaveBeenCalledWith({
         service_type: 2,
         service_ref_id: "10",
@@ -171,11 +191,17 @@ describe("ReviewActivity", () => {
   // - ReviewActivity hiện chưa try/catch lỗi callFetchReview rejected.
   // - Jest hiển thị "Network error" vì component để unhandled promise rejection.
   // - Đây là fail thật để document robustness gap, không phải fail giả.
+  // TC ID: ACTDETAIL-TC-003
+  // MỤC TIÊU: Kiểm tra kịch bản "ACTDETAIL-TC-010 - should keep review section stable when review API fails" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("ACTDETAIL-TC-010 - should keep review section stable when review API fails", async () => {
+    // Arrange: gia lap API bi loi de kiem tra nhanh xu ly loi cua component.
     callFetchReview.mockRejectedValue(new Error("Network error"));
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<ReviewActivity activity={{ avg_star: 4.5 }} />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Chưa có đánh giá nào")).toBeInTheDocument();
   });
 });

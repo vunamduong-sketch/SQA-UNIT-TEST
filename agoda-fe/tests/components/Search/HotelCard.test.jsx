@@ -130,6 +130,7 @@ describe("HotelCard", () => {
     );
 
     // Action: User bấm nút xem phòng trên card.
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("button", { name: "Xem phòng" }));
 
     // Expected: Điều hướng đúng slug không dấu và giữ đầy đủ query params.

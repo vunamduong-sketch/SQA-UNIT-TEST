@@ -87,23 +87,35 @@ describe("RecommendedAccommodation", () => {
     });
   });
 
+  // TC ID: HOME-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads cities and hotels for the first selected city" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads cities and hotels for the first selected city", async () => {
-    // TC_HOME_04
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<RecommendedAccommodation />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetCities).toHaveBeenCalledWith({ current: 1, pageSize: 6 });
     });
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchHotel).toHaveBeenCalledWith({ current: 1, pageSize: 20, cityId: 10 });
     });
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Hotel A")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Hai Chau")).toBeInTheDocument();
   });
 
+  // TC ID: HOME-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "shows empty state when selected city has no hotels" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("shows empty state when selected city has no hotels", async () => {
-    // TC_HOME_05
     mockCallFetchHotel
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({
         isSuccess: true,
         data: [
@@ -117,17 +129,22 @@ describe("RecommendedAccommodation", () => {
           },
         ],
       })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({
         isSuccess: true,
         data: [],
       });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<RecommendedAccommodation />);
 
     await screen.findByText("Hotel A");
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Nha Trang"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchHotel).toHaveBeenLastCalledWith({ current: 1, pageSize: 20, cityId: 20 });
     });
   });

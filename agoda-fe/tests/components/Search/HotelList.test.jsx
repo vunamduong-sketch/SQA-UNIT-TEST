@@ -79,7 +79,9 @@ describe("HotelList", () => {
     expect(screen.getByText("2 khách sạn")).toBeInTheDocument();
 
     // Action: User chọn sort option "Giá cao nhất".
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const sortButton = screen.getByRole("button", { name: "Giá cao nhất" });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(sortButton);
 
     // Expected: Sort option được chọn có active style.

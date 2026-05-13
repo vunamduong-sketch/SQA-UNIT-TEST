@@ -78,11 +78,16 @@ describe("BookingContactInfomation", () => {
   // INPUT: Redux user có first_name, last_name, email, phone_number.
   // EXPECTED OUTPUT: Các input hiển thị đúng giá trị user.
   it("BOOKVEH-TC-004 - prefills user information from the store", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingContactInfomation />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByDisplayValue("An")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByDisplayValue("Nguyen")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByDisplayValue("an@example.com")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByDisplayValue("0123456789")).toBeInTheDocument();
   });
 
@@ -91,13 +96,18 @@ describe("BookingContactInfomation", () => {
   // INPUT: Click checkbox terms.
   // EXPECTED OUTPUT: Button "Đặt bây giờ →" chuyển từ disabled sang enabled.
   it("BOOKVEH-TC-005 - enables booking button after terms checkbox is checked", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingContactInfomation />);
 
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const submitButton = screen.getByRole("button", { name: "Đặt bây giờ →" });
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(submitButton).toBeDisabled();
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByRole("checkbox"));
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(submitButton).toBeEnabled();
   });
 });

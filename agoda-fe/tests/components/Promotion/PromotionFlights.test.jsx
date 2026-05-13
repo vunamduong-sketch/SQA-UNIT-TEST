@@ -110,33 +110,49 @@ describe("PromotionFlights", () => {
     });
   });
 
+  // TC ID: PROMO-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "shows validation error when missing required search fields" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("shows validation error when missing required search fields", async () => {
-    // TC_PROMOTION_03
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionFlights />);
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(await screen.findByText("TÌM CHUYẾN BAY"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockMessageError).toHaveBeenCalled();
     });
   });
 
+  // TC ID: TC_PROMOTION_04
+
+  // MỤC TIÊU: Kiểm tra kịch bản "navigates to flight search when search form is valid".
+  // LÝ DO: Đảm bảo test case có mã nhận diện rõ ràng và tập trung vào hành vi người dùng.
   it("navigates to flight search when search form is valid", async () => {
-    // TC_PROMOTION_04
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionFlights />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("Chọn sân bay đi"), {
       target: { value: "1" },
     });
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByLabelText("Chọn sân bay đến"), {
       target: { value: "2" },
     });
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByLabelText("Chọn ngày đi"), {
       target: { value: "2026-05-10" },
     });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("TÌM CHUYẾN BAY"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockNavigate).toHaveBeenCalledWith(
         "/flight?origin=1&destination=2&departureDate=2026-05-10&returnDate=&passengers=1&seatClass=economy&tripType=one-way&promotionId=22"
       );

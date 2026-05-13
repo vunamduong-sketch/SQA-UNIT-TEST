@@ -45,24 +45,38 @@ describe("SaleOffAll", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: HOME-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "requests hotel, flight and activity promotions and renders promotion links" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("requests hotel, flight and activity promotions and renders promotion links", async () => {
-    // TC_HOME_03
     mockGetPromotionsAdmin
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ data: [{ id: 1, image: "hotel.jpg", title: "Hotel promo" }] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ data: [{ id: 2, image: "flight.jpg", title: "Flight promo" }] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ data: [{ id: 3, image: "activity.jpg", title: "Activity promo" }] });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<SaleOffAll />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetPromotionsAdmin).toHaveBeenCalledTimes(3);
     });
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const hotelPromo = await screen.findByAltText("Hotel promo");
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const flightPromo = await screen.findByAltText("Flight promo");
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const activityPromo = await screen.findByAltText("Activity promo");
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(hotelPromo.closest("a")).toHaveAttribute("href", "/promotions/1?type=accommodation");
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(flightPromo.closest("a")).toHaveAttribute("href", "/promotions/2?type=flight");
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(activityPromo.closest("a")).toHaveAttribute("href", "/promotions/3?type=activity");
   });
 });

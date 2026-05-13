@@ -54,39 +54,60 @@ describe("TravelGuideCity", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: GUIDE-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads city detail and featured guides" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads city detail and featured guides", async () => {
-    // TC_TRAVELGUIDE_05
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCityDetail.mockResolvedValue({ isSuccess: true, data: { id: 10, name: "Da Nang", country: { id: 84, name: "Viet Nam" }, image_handbook: "dn.jpg" } });
     mockCallFetchHandbook
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [{ id: 1, title: "Guide DN", image: "g.jpg", city: { id: 10, country: { id: 84 } } }] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [{ id: 2, title: "Guide City", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<TravelGuideCity />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchCityDetail).toHaveBeenCalledWith("10");
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchHandbook).toHaveBeenCalledWith("current=1&pageSize=3&city_id=10&recommended=true");
     });
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Guide DN")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Guide City")).toBeInTheDocument();
   });
 
+  // TC ID: GUIDE-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "updates category and pagination for city guides" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("updates category and pagination for city guides", async () => {
-    // TC_TRAVELGUIDE_06
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallFetchCityDetail.mockResolvedValue({ isSuccess: true, data: { id: 10, name: "Da Nang", country: { id: 84 } } });
     mockCallFetchHandbook
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [] })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValueOnce({ isSuccess: true, data: [{ id: 2, title: "Guide City", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } })
+      // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
       .mockResolvedValue({ isSuccess: true, data: [{ id: 3, title: "Guide Culture", city: { id: 10, country: { id: 84 } } }], meta: { totalItems: 1, totalPages: 1 } });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<TravelGuideCity />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("city-category"), {
       target: { value: "culture" },
     });
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallFetchHandbook).toHaveBeenLastCalledWith(
         "current=1&pageSize=10&city_id=10&category=culture&recommended=true"
       );

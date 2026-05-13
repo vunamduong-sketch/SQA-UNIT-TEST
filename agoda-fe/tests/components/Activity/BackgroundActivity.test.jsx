@@ -38,6 +38,7 @@ describe("BackgroundActivity", () => {
   // LÝ DO: Đây là điểm chạm đầu tiên của user khi vào trang hoạt động;
   //        thiếu heading/input/button sẽ làm hỏng luồng tìm kiếm.
   it("renders the activity landing hero with search controls", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BackgroundActivity />);
 
     // Expected: Heading cấp 1 đúng nội dung theo specification.

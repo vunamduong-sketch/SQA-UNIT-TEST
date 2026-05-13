@@ -77,9 +77,13 @@ describe("PromotionActivities", () => {
     mockGetImageUrl.mockReturnValue("thumb.jpg");
   });
 
+  // TC ID: PROMO-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads city filters and renders activity promotion list" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads city filters and renders activity promotion list", async () => {
-    // TC_PROMOTION_05
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCities.mockResolvedValue({ data: [{ id: 1, name: "Da Nang" }] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetPromotionDetail.mockResolvedValue({
       data: {
         title: "Sale Activity",
@@ -101,19 +105,28 @@ describe("PromotionActivities", () => {
       },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionActivities />);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetCities).toHaveBeenCalled();
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetPromotionDetail).toHaveBeenCalledWith("33", { promotion_type: 3 });
     });
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Ba Na Hills")).toBeInTheDocument();
   });
 
+  // TC ID: PROMO-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "updates filters and navigates to activity detail" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("updates filters and navigates to activity detail", async () => {
-    // TC_PROMOTION_06
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetCities.mockResolvedValue({ data: [{ id: 1, name: "Da Nang" }] });
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockGetPromotionDetail.mockResolvedValue({
       data: {
         title: "Sale Activity",
@@ -135,21 +148,28 @@ describe("PromotionActivities", () => {
       },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<PromotionActivities />);
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(await screen.findByLabelText("Chọn thành phố"), {
       target: { value: "1" },
     });
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(await screen.findByText("choose-range"));
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(await screen.findByText("Xem chi tiết"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockGetPromotionDetail).toHaveBeenLastCalledWith("33", {
         promotion_type: 3,
         city_id: 1,
         start_date: "2026-06-01",
         end_date: "2026-06-03",
       });
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockNavigate).toHaveBeenCalledWith("/activity/detail/9");
     });
   });

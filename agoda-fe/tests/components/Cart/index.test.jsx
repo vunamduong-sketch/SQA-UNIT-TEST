@@ -113,17 +113,23 @@ describe("Cart", () => {
   // INPUT: Render <Cart /> với dữ liệu tĩnh hiện tại của component.
   // EXPECTED OUTPUT: User thấy tiêu đề giỏ hàng, nút tiếp tục, booking khách sạn và chuyến bay.
   it("CART-TC-001 - renders cart summary and major booking sections", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Cart />);
 
     // Kiểm tra tiêu đề giỏ hàng và CTA thanh toán ở sidebar.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Xe đẩy hàng của quý khách (6)")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByRole("button", { name: "Tiếp theo" })).toBeInTheDocument();
 
     // Kiểm tra các loại booking chính user đang có trong cart.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(
       screen.getAllByText("Khách sạn Sài Gòn's Book Đà Lạt (Saigon’s Book Da Lat Hotel)").length
     ).toBeGreaterThan(0);
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getAllByText("Hà Nội (HAN)").length).toBeGreaterThan(0);
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getAllByText("Đà Lạt (DLI)").length).toBeGreaterThan(0);
   });
 
@@ -132,14 +138,22 @@ describe("Cart", () => {
   // INPUT: Render <Cart />.
   // EXPECTED OUTPUT: 7 nhãn tab hoạt động hiển thị đầy đủ.
   it("CART-TC-002 - renders all activity tab labels", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Cart />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Tất cả")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Chuyến tham quan")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Trải nghiệm")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getAllByText("Di chuyển").length).toBeGreaterThan(0);
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Ẩm thực")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Điểm tham quan")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Hành trang du lịch")).toBeInTheDocument();
   });
 
@@ -148,11 +162,15 @@ describe("Cart", () => {
   // INPUT: Mock constants/profile gồm Hotel và Flight.
   // EXPECTED OUTPUT: Link Hotel trỏ /hotel, link Flight trỏ /flight.
   it("CART-TC-003 - renders trip completion shortcut links", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Cart />);
 
     // Kiểm tra text section và href để đảm bảo user có thể đi tiếp sang dịch vụ khác.
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Hoàn tất chuyến đi với")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByRole("link", { name: /Hotel ưu đãi/i })).toHaveAttribute("href", "/hotel");
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByRole("link", { name: /Flight giá tốt/i })).toHaveAttribute("href", "/flight");
   });
 });

@@ -53,12 +53,16 @@ describe("Hotel SearchBarSection", () => {
     jest.clearAllMocks();
   });
 
+  // TC ID: HOTEL-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "loads location suggestions and selects one" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("loads location suggestions and selects one", async () => {
-    // TC_HOTEL_01
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallLocationSuggestions.mockResolvedValue({
       data: [{ name: "Da Nang Riverside" }],
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(
       <SearchBarSection
         setFocusDatePicker={jest.fn()}
@@ -66,30 +70,43 @@ describe("Hotel SearchBarSection", () => {
       />
     );
 
+    // Act: mo phong thao tac nhap/thay doi du lieu tren form.
     fireEvent.change(screen.getByPlaceholderText("Nhập tên khách sạn..."), {
       target: { value: "Da N" },
     });
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallLocationSuggestions).toHaveBeenCalledWith("Da N", "hotel");
     });
 
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const suggestion = await screen.findByText("Da Nang Riverside");
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(suggestion);
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(screen.queryByText("Da Nang Riverside")).not.toBeInTheDocument();
     });
   });
 
+  // TC ID: HOTEL-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "submits search data with returned hotel rooms" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("submits search data with returned hotel rooms", async () => {
-    // TC_HOTEL_02
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const onSearch = jest.fn();
+    // Arrange: chuan bi du lieu hoac mock function dung rieng cho test case.
     const setFocusDatePicker = jest.fn();
+    // Arrange: gia lap du lieu API tra ve de component chay theo dung kich ban test.
     mockCallSearchRoomQuery.mockResolvedValue({
       data: { id: 77, rooms: [{ id: 1 }] },
     });
 
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(
       <SearchBarSection
         onSearch={onSearch}
@@ -98,11 +115,16 @@ describe("Hotel SearchBarSection", () => {
       />
     );
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("choose-range"));
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(screen.getByText("Cập nhật"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() => {
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(mockCallSearchRoomQuery).toHaveBeenCalled();
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(onSearch).toHaveBeenCalledWith(expect.objectContaining({
         hotelId: 77,
         rooms: [{ id: 1 }],

@@ -38,6 +38,7 @@ describe("Activity index", () => {
   // LÝ DO: Nếu index thiếu một section, user sẽ mất một phần nội dung quan trọng
   //        dù test từng component con vẫn có thể pass.
   it("renders all Activity section components in order", () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<Activity />);
 
     // Expected: Hero landing section có mặt.

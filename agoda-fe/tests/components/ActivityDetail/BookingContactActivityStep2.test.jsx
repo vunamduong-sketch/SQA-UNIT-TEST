@@ -137,12 +137,20 @@ describe("BookingContactActivityStep2", () => {
   // - Có 2 phương thức thanh toán: online và tiền mặt.
   // - Có tên activity trong summary.
   // LÝ DO TEST: User cần thấy đúng thông tin trước khi thực hiện thanh toán.
+  // TC ID: ACTDETAIL-TC-001
+  // MỤC TIÊU: Kiểm tra kịch bản "ACTDETAIL-TC-004 - renders payment options and booking summary" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("ACTDETAIL-TC-004 - renders payment options and booking summary", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingContactActivityStep2 />);
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(await screen.findByText("Chi tiết thanh toán")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Thanh toán online")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Thanh toán tiền mặt")).toBeInTheDocument();
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(screen.getByText("Saigon Food Tour")).toBeInTheDocument();
   });
 
@@ -158,12 +166,19 @@ describe("BookingContactActivityStep2", () => {
   // - payWithStripe được gọi với success_url/cancel_url đúng.
   // - window.location.href đổi sang Stripe checkout URL.
   // LÝ DO TEST: Đây là behavior quan trọng nhất của bước thanh toán online.
+  // TC ID: ACTDETAIL-TC-002
+  // MỤC TIÊU: Kiểm tra kịch bản "ACTDETAIL-TC-005 - creates online payment and redirects to Stripe checkout" theo hành vi người dùng.
+  // LÝ DO: Giúp dễ truy vết test case và xác nhận component đáp ứng đúng yêu cầu nghiệp vụ.
   it("ACTDETAIL-TC-005 - creates online payment and redirects to Stripe checkout", async () => {
+    // Act: render component de bat dau mo phong luong nguoi dung trong test.
     render(<BookingContactActivityStep2 />);
 
+    // Act: mo phong thao tac click giong hanh dong that cua nguoi dung.
     fireEvent.click(await screen.findByText("THANH TOÁN NGAY"));
 
+    // Assert: cho dieu kien bat dong bo hoan tat truoc khi kiem tra ket qua.
     await waitFor(() =>
+      // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
       expect(createPayment).toHaveBeenCalledWith({
         booking_id: "1",
         method: 1,
@@ -171,10 +186,12 @@ describe("BookingContactActivityStep2", () => {
       })
     );
 
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(payWithStripe).toHaveBeenCalledWith(99, expect.objectContaining({
       success_url: "http://localhost/book/confirmation?isSuccess=true&booking_id=1&type=2&ref=abc",
       cancel_url: "http://localhost/book/confirmation?isSuccess=false&booking_id=1&type=2&ref=abc",
     }));
+    // Assert: kiem tra ket qua hien thi/callback/dieu huong dung voi expected output.
     expect(window.location.href).toBe("https://stripe.example/checkout");
   });
 });
