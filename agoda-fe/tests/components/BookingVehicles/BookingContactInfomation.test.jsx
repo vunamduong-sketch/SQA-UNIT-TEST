@@ -2,6 +2,15 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import BookingContactInfomation from "src-under-test/components/BookingVehicles/BookingContactInfomation";
 
+// ============================================================
+// TÊN FILE TEST: BookingContactInfomation.test.jsx
+// MỤC ĐÍCH:
+// - Kiểm thử form thông tin liên hệ ở bước đặt xe.
+// - Giữ test vừa đủ: prefill user info và bật nút đặt khi user đồng ý điều khoản.
+// - Test dựa trên input/button user nhìn thấy, không phụ thuộc layout/CSS.
+// ============================================================
+
+// Mock Redux user để kiểm tra form tự điền thông tin liên hệ từ store.
 jest.mock("redux/hooks", () => ({
   useAppSelector: jest.fn((selector) =>
     selector({
@@ -17,69 +26,46 @@ jest.mock("redux/hooks", () => ({
   ),
 }));
 
-jest.mock("react-router-dom", () => ({
-  useLocation: () => ({
-    state: null,
-  }),
-}), { virtual: true });
+// Component đọc location.state để lấy thông tin booking xe.
+// Ở 2 test này chỉ kiểm tra form contact nên state=null là đủ.
+jest.mock("react-router-dom", () => ({ useLocation: () => ({ state: null }) }), { virtual: true });
 
+// Mock map và icon libraries để tránh lỗi jsdom khi render map/icon thật.
 jest.mock("react-leaflet", () => ({
   MapContainer: ({ children }) => <div data-testid="map">{children}</div>,
   Marker: ({ children }) => <div>{children}</div>,
   Popup: ({ children }) => <div>{children}</div>,
   TileLayer: () => <div />,
 }));
-
 jest.mock("react-leaflet-cluster", () => ({ children }) => <div>{children}</div>);
 jest.mock("leaflet", () => ({ Icon: jest.fn() }));
 jest.mock("@ant-design/icons", () => {
-  const React = require("react");
   const MockIcon = (props) => <span {...props} />;
-  return new Proxy(
-    {},
-    {
-      get: () => MockIcon,
-    }
-  );
+  return new Proxy({}, { get: () => MockIcon });
 });
 jest.mock("react-icons/md", () => ({ MdOutlineFreeCancellation: () => <span /> }));
 
+// Mock Ant Design bằng HTML đơn giản để dễ query input/select/button.
 jest.mock("antd", () => {
   const React = require("react");
-  const InputComponent = React.forwardRef(({ children, ...props }, ref) => (
-    <input ref={ref} {...props}>{children}</input>
-  ));
+  const InputComponent = React.forwardRef(({ children, ...props }, ref) => <input ref={ref} {...props}>{children}</input>);
   InputComponent.Group = ({ children }) => <div>{children}</div>;
   const Select = ({ children, value, defaultValue, onChange, ...props }) => (
-    <select
-      aria-label={props["aria-label"] || props.placeholder || "select"}
-      value={value ?? defaultValue ?? ""}
-      onChange={(event) => onChange?.(event.target.value)}
-    >
+    <select aria-label={props["aria-label"] || props.placeholder || "select"} value={value ?? defaultValue ?? ""} onChange={(event) => onChange?.(event.target.value)}>
       {children}
     </select>
   );
-  Select.Option = ({ children, value }) => (
-    <option value={value}>{typeof children === "string" ? children : value}</option>
-  );
+  Select.Option = ({ children, value }) => <option value={value}>{typeof children === "string" ? children : value}</option>;
   const Checkbox = ({ children, checked, onChange }) => (
     <label>
-      <input
-        type="checkbox"
-        checked={!!checked}
-        onChange={(event) => onChange?.({ target: { checked: event.target.checked } })}
-      />
+      <input type="checkbox" checked={!!checked} onChange={(event) => onChange?.({ target: { checked: event.target.checked } })} />
       {children}
     </label>
   );
   return {
     Input: InputComponent,
     Select,
-    Button: ({ children, disabled, ...props }) => (
-      <button disabled={disabled} {...props}>
-        {children}
-      </button>
-    ),
+    Button: ({ children, disabled, ...props }) => <button disabled={disabled} {...props}>{children}</button>,
     Card: ({ children }) => <div>{children}</div>,
     Checkbox,
     Divider: () => <div />,
@@ -87,8 +73,11 @@ jest.mock("antd", () => {
 });
 
 describe("BookingContactInfomation", () => {
-  it("prefills user information from the store", () => {
-    // TC_BOOKINGVEHICLES_03
+  // TC ID: BOOKVEH-TC-004
+  // MỤC TIÊU: Form contact tự điền thông tin user từ Redux store.
+  // INPUT: Redux user có first_name, last_name, email, phone_number.
+  // EXPECTED OUTPUT: Các input hiển thị đúng giá trị user.
+  it("BOOKVEH-TC-004 - prefills user information from the store", () => {
     render(<BookingContactInfomation />);
 
     expect(screen.getByDisplayValue("An")).toBeInTheDocument();
@@ -97,8 +86,11 @@ describe("BookingContactInfomation", () => {
     expect(screen.getByDisplayValue("0123456789")).toBeInTheDocument();
   });
 
-  it("enables the booking button after the terms checkbox is checked", () => {
-    // TC_BOOKINGVEHICLES_04
+  // TC ID: BOOKVEH-TC-005
+  // MỤC TIÊU: Nút đặt xe chỉ được bật sau khi user đồng ý điều khoản.
+  // INPUT: Click checkbox terms.
+  // EXPECTED OUTPUT: Button "Đặt bây giờ →" chuyển từ disabled sang enabled.
+  it("BOOKVEH-TC-005 - enables booking button after terms checkbox is checked", () => {
     render(<BookingContactInfomation />);
 
     const submitButton = screen.getByRole("button", { name: "Đặt bây giờ →" });
